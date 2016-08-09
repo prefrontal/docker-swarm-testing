@@ -78,6 +78,20 @@ Mosty-correct steps for AWS:
 
 ---
 
+Mostly-correct steps for Vagrant:
+
+1. Run the `vagrant up` command in the provisioning-vagrant folder
+
+2. SSH to each of the node machines and run the command to join the swarm
+
+  ```docker swarm join --token <insert swarm token> 192.168.100.100```
+
+  To get the swarm token, you can either:
+  - Log in to the manager node and run `docker swarm join-token worker`
+  - Look at the output of the manager playbook, which has the full worker join command
+
+---
+
 Using Docker Swarm:
 
 At this point you have a connected swarm, but it is not running anything.  To get some containers running, you need to start a new service.  Here is an example command to run on the manager node:
