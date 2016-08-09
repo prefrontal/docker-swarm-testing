@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.synced_folder ".", "/vagrant"
+  
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+  
+  # Setup swarm manager virtual machine
+  
+  config.vm.define "swarm_manager" do |config|
+    config.vm.hostname = "swarm-manager"
+    config.vm.network "private_network", ip: "192.168.100.100"
+    
+	config.vm.provision "ansible" do |ansible|
+	  ansible.playbook = "swarm-docker.yml"
+      ansible.verbose = true
+	  ansible.sudo = true
+	end
+	
+	config.vm.provision "ansible" do |ansible|
+	  ansible.playbook = "swarm-manager.yml"
+	  ansible.verbose = true
+	  ansible.sudo = true
+	end
+		
+  end
+
+  # Setup swarm node virtual machines
+  
+  (1..2).each do |i|
+  
+    config.vm.define "swarm_node#{i}" do |config|
+      config.vm.hostname = "swarm-node#{i}"
+      config.vm.network "private_network", ip: "192.168.100.10#{i}"     
+    
+      config.vm.provision "ansible" do |ansible|
+	    ansible.playbook = "swarm-docker.yml"
+	    ansible.verbose = true
+	    ansible.sudo = true
+	  end 
+    end
+
+  end
+
+end

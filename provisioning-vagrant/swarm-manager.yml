@@ -1,0 +1,10 @@
+---
+- hosts: all
+  sudo: yes
+  tasks: 
+
+  - name: Run Docker swarm
+    shell: docker swarm init --advertise-addr 192.168.100.100
+    register: swarm
+
+  - debug: msg="{{ swarm.stdout }}"
