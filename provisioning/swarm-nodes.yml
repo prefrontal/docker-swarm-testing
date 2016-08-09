@@ -1,0 +1,15 @@
+---
+- hosts: nodes
+  remote_user: ubuntu
+  sudo: yes
+  tasks: 
+
+  - name: Add Docker node
+    shell: docker swarm join --token <insert swarm token> <insert manager ip>
+    register: swarm
+
+  - debug: msg="{{ swarm.stdout }}"
+  
+  
+  
+  

@@ -1,0 +1,11 @@
+---
+- hosts: manager
+  remote_user: ubuntu
+  sudo: yes
+  tasks: 
+
+  - name: Run Docker swarm
+    shell: docker swarm init --advertise-addr <insert manager ip>
+    register: swarm
+
+  - debug: msg="{{ swarm.stdout }}"
